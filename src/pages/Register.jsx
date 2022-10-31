@@ -6,7 +6,6 @@ import CredentialButton from "../components/CredentialComponents/CredentialButto
 import {
   createUserWithEmailAndPassword,
   getAuth,
-  signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
 import { db } from "../firebase";
@@ -15,6 +14,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import GoogleAuthButton from "../components/GoogleAuthButton";
+import { useDispatch } from "react-redux";
+import { userAction ,userDataAction} from "../actions";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -22,6 +23,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const auth = getAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -44,6 +46,8 @@ export default function Register() {
       };
       data.timeStamp = serverTimestamp();
       await setDoc(doc(db, "users", user.uid), data);
+      dispatch(userAction(user));
+      dispatch(userDataAction());
       toast.info("You are successfully registered");
       navigate("/");
     } catch (error) {
@@ -61,10 +65,7 @@ export default function Register() {
         />
 
         <div className="pt-3 w-[45%]  items-center justify-center mx-auto">
-          <form
-            onSubmit={onSubmit}
-            className="pb-2"
-          >
+          <form onSubmit={onSubmit} className="pb-2">
             <div className="pb-3">
               <CredentialLabel text="Name" />
               <CredentialInput
@@ -94,7 +95,7 @@ export default function Register() {
           <p className="font-semibold py-2 text-red-400 text-lg text-center">
             OR
           </p>
-          <GoogleAuthButton/>
+          <GoogleAuthButton />
         </div>
       </div>
     </div>

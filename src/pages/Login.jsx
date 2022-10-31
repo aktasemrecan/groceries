@@ -5,7 +5,8 @@ import HeaderLabel from "../components/HeaderLabel";
 import CredentialButton from "../components/CredentialComponents/CredentialButton";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { db } from "../firebase";
-
+import { userAction} from "../actions";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import GoogleAuthButton from "../components/GoogleAuthButton";
@@ -15,6 +16,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const auth = getAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -22,8 +24,8 @@ export default function Login() {
 
   const onClick = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast.info("You are successfully signed-in");
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      dispatch(userAction(user));
       navigate("/");
     } catch (error) {
       toast.error(error.message);
@@ -40,10 +42,7 @@ export default function Login() {
         />
 
         <div className="pt-3 w-[45%]  items-center justify-center mx-auto">
-          <form
-            onSubmit={onSubmit}
-            className="pb-2"
-          >
+          <form onSubmit={onSubmit} className="pb-2">
             <div className="pb-3">
               <CredentialLabel text="Email" />
               <CredentialInput
@@ -62,8 +61,10 @@ export default function Login() {
             </div>
             <CredentialButton onClick={onClick} text="login" />
           </form>
-          <p className="font-semibold py-2 text-red-400 text-lg text-center">OR</p>
-          <GoogleAuthButton/>
+          <p className="font-semibold py-2 text-red-400 text-lg text-center">
+            OR
+          </p>
+          <GoogleAuthButton />
         </div>
       </div>
     </div>

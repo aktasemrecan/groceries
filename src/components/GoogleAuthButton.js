@@ -4,11 +4,14 @@ import { db } from "../firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { userAction, userDataAction } from "../actions";
 
 export default function GoogleAuthButton() {
   const auth = getAuth();
   const googleProvider = new GoogleAuthProvider();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onClick = async () => {
     try {
@@ -20,6 +23,8 @@ export default function GoogleAuthButton() {
       data.timeStamp = serverTimestamp();
       setDoc(doc(db, "users", user.uid), data);
       toast.info("You signed in with google successfully!");
+      dispatch(userAction(user));
+      dispatch(userDataAction());
       navigate("/");
     } catch (error) {
       toast.error(error.message);
