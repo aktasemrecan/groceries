@@ -18,7 +18,7 @@ export default function Header() {
   };
 
   return (
-    <nav className="m-2 p-3 rounded-2xl bg-gray-800 border-gray-700">
+    <nav className="mt-4 mx-4 p-3 rounded-2xl bg-gray-800 border-gray-700">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
         <Link className="flex items-center" to="/">
           <img
