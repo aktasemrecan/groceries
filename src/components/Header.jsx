@@ -33,15 +33,23 @@ export default function Header() {
         <div className="w-full md:block md:w-auto">
           <ul className="text-white flex space-x-2 items-center justify-end">
             <HeaderNav text="Home" path="/" />
-            {!state.user && <HeaderNav text="Login" path="/login" />}
-            {!state.user && <HeaderNav text="Register" path="/register" />}
-            {state.user && (
-              <li
-                onClick={onClick}
-                className="border-gray-600 border-solid border-2  rounded-xl px-2 py-1 text-lg cursor-pointer"
-              >
-                Sign Out
-              </li>
+            {!state.userReducer.user && (
+              <>
+                <HeaderNav text="Login" path="/login" />
+                <HeaderNav text="Register" path="/register" />
+              </>
+            )}
+            {state.userReducer.user && (
+              <>
+                <HeaderNav text="Favorites" path="/favorites" />
+                <HeaderNav text="My Cart" path="/my-shopping-cart" />
+                <li
+                  onClick={onClick}
+                  className="border-gray-600 border-solid border-2  rounded-xl px-2 py-1 text-lg cursor-pointer"
+                >
+                  Sign Out
+                </li>
+              </>
             )}
           </ul>
         </div>

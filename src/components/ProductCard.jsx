@@ -1,13 +1,37 @@
 import React from "react";
 import { MdFavorite } from "react-icons/md";
 import { GrCart } from "react-icons/gr";
+import { getAuth, updateProfile } from "firebase/auth";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import { db } from "../firebase";
+import { toast } from "react-toastify";
+
+
 
 export default function ProductCard({
   productName,
   imageUrl,
   price,
   quantityT,
+  productId
 }) {
+
+  const state = useSelector((state)=>state);
+  const auth = getAuth();
+
+
+  const onFavoriteClick = async()=> {
+    try {
+      await updateDoc(doc(db,"users",state.userReducer.user.uid),{
+        favorites: arrayUnion(productId)
+      });
+      toast.info("Product has been successfully added to favorites.");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="lg:m-5 bg-gray-100 rounded-xl overflow-hidden shadow-lg">
       <img
@@ -25,7 +49,7 @@ export default function ProductCard({
       </div>
       <hr />
       <div className="flex justify-between items-center px-3 py-3">
-        <button className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out">
+        <button onClick={onFavoriteClick} className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out">
           <MdFavorite className="text-3xl" />
         </button>
         <button className="items-center flex justify-around rounded-2xl w-full md:w-[75%] text-white text-xl font-sans py-2 px-1 bg-blue-400 hover:bg-blue-500 active:bg-blue-600 transition duration-200 ease-in-out">

@@ -29,6 +29,7 @@ export default function Products() {
     return snapData.map((doc, i) => (
       <ProductCard
         key={i}
+        productId={doc.id}
         productName={doc.productName}
         price={doc.price}
         imageUrl={doc.imageUrl}

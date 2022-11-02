@@ -11,6 +11,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userAction,userDataAction } from "./actions";
 import { db } from "./firebase";
+import Favorites from "./pages/Favorites";
+import MyCart from "./pages/MyCart";
 
 
 
@@ -33,7 +35,7 @@ function App() {
         
       }
     });
-  }, [state.user]);
+  }, [state.userReducer.user]);
 
   return (
     <>
@@ -43,6 +45,8 @@ function App() {
         <Route path="/" exact element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/my-shopping-cart" element={<MyCart />} />
+        <Route path="/favorites" element={<Favorites />} />
         <Route path="/add-product" element={<AddProduct />} />
       </Routes>
     </BrowserRouter>
