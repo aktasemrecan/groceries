@@ -1,36 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdFavorite } from "react-icons/md";
 import { GrCart } from "react-icons/gr";
-import { getAuth, updateProfile } from "firebase/auth";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { useSelector } from "react-redux";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
-
-
+import _ from "lodash";
+import { favoriteChangedAction } from "../actions";
 
 export default function ProductCard({
   productName,
   imageUrl,
   price,
   quantityT,
-  productId
+  productId,
 }) {
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const [checkBool, setCheckBool] = useState();
 
-  const state = useSelector((state)=>state);
-  const auth = getAuth();
-
-
-  const onFavoriteClick = async()=> {
+  const onFavoriteClick = async () => {
     try {
-      await updateDoc(doc(db,"users",state.userReducer.user.uid),{
-        favorites: arrayUnion(productId)
-      });
-      toast.info("Product has been successfully added to favorites.");
+      if (checkBool) {
+        await updateDoc(doc(db, "users", state.userReducer.user.uid), {
+          favorites: arrayRemove(productId),
+        });
+        checkFavorite();
+
+        toast.info("Product has been deleted from favorites.");
+      } else {
+        await updateDoc(doc(db, "users", state.userReducer.user.uid), {
+          favorites: arrayUnion(productId),
+        });
+        checkFavorite();
+
+        toast.info("Product has been successfully added to favorites.");
+      }
+      dispatch(favoriteChangedAction());
+
+    } catch (error) {
+      toast.error("e" + error.message);
+    }
+  };
+
+  async function checkFavorite() {
+    try {
+      const snapDoc = await getDoc(
+        doc(db, "users", state.userReducer.user.uid)
+      );
+      const favoritesArray = snapDoc.data().favorites;
+      const checkBool = _.includes(favoritesArray, productId);
+      setCheckBool(checkBool);
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }
+
+  useEffect(() => {
+    checkFavorite(productId);
+  }, []);
 
   return (
     <div className="lg:m-5 bg-gray-100 rounded-xl overflow-hidden shadow-lg">
@@ -49,7 +83,10 @@ export default function ProductCard({
       </div>
       <hr />
       <div className="flex justify-between items-center px-3 py-3">
-        <button onClick={onFavoriteClick} className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out">
+        <button
+          onClick={onFavoriteClick}
+          className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
+        >
           <MdFavorite className="text-3xl" />
         </button>
         <button className="items-center flex justify-around rounded-2xl w-full md:w-[75%] text-white text-xl font-sans py-2 px-1 bg-blue-400 hover:bg-blue-500 active:bg-blue-600 transition duration-200 ease-in-out">

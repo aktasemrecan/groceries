@@ -23,7 +23,7 @@ export default function Header() {
         <Link className="flex items-center" to="/">
           <img
             src="https://flowbite.com/docs/images/logo.svg"
-            class="mr-3 h-6 sm:h-10"
+            className="mr-3 h-6 sm:h-10"
             alt="Flowbite Logo"
           />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">

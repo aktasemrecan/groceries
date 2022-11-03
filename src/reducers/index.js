@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import productsReducer from "./productsReducer";
+import checkChangeReducer from "./checkChangeReducer";
 import userReducer from "./userReducer";
 
 const rootReducer = combineReducers({
     userReducer: userReducer,
-    productsReducer: productsReducer
+    checkChangeReducer: checkChangeReducer
 });
 
 export default rootReducer;
