@@ -13,6 +13,7 @@ import { userAction,userDataAction } from "./actions";
 import { db } from "./firebase";
 import Favorites from "./pages/Favorites";
 import MyCart from "./pages/MyCart";
+import ProductDetail from "./pages/ProductDetail";
 
 
 
@@ -48,6 +49,7 @@ function App() {
         <Route path="/my-shopping-cart" element={<MyCart />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/add-product" element={<AddProduct />} />
+        <Route path="/product" element={<ProductDetail />} />
       </Routes>
     </BrowserRouter>
     <ToastContainer

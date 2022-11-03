@@ -23,8 +23,11 @@ export const userDataAction = (userId) => async (dispatch, getState) => {
   }
 };
 
-export const favoriteChangedAction = ()=>{
-  return {
-    type: "FAVORITE_CHANGED"
+
+
+export const productDataAction = (product)=>{
+  return{
+    type: "PRODUCT_DATA",
+    payload: product
   }
 };

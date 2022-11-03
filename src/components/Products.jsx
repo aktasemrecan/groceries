@@ -34,6 +34,7 @@ export default function Products() {
         price={doc.price}
         imageUrl={doc.imageUrl}
         quantityT={doc.quantityT}
+        discount={doc.discount}
       />
     ));
   };

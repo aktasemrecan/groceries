@@ -8,11 +8,13 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
 import _ from "lodash";
-import { favoriteChangedAction } from "../actions";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { productDataAction } from "../actions";
 
 export default function ProductCard({
   productName,
@@ -20,9 +22,11 @@ export default function ProductCard({
   price,
   quantityT,
   productId,
+  discount
 }) {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [checkBool, setCheckBool] = useState();
 
   const onFavoriteClick = async () => {
@@ -42,11 +46,23 @@ export default function ProductCard({
 
         toast.info("Product has been successfully added to favorites.");
       }
-      dispatch(favoriteChangedAction());
-
     } catch (error) {
       toast.error("e" + error.message);
     }
+  };
+
+  const onProductClick = () => {
+    dispatch(
+      productDataAction({
+        productName: productName,
+        imageUrl: imageUrl,
+        price: price,
+        quantityT: quantityT,
+        productId: productId,
+        discount: discount
+      })
+    );
+    navigate("/product");
   };
 
   async function checkFavorite() {
@@ -63,7 +79,7 @@ export default function ProductCard({
   }
 
   useEffect(() => {
-    checkFavorite(productId);
+    checkFavorite();
   }, []);
 
   return (
@@ -89,11 +105,14 @@ export default function ProductCard({
         >
           <MdFavorite className="text-3xl" />
         </button>
-        <button className="items-center flex justify-around rounded-2xl w-full md:w-[75%] text-white text-xl font-sans py-2 px-1 bg-blue-400 hover:bg-blue-500 active:bg-blue-600 transition duration-200 ease-in-out">
+        <button
+          onClick={onProductClick}
+          className="items-center flex justify-around rounded-2xl w-full md:w-[75%] text-white text-xl font-sans py-2 px-1 bg-blue-400 hover:bg-blue-500 active:bg-blue-600 transition duration-200 ease-in-out"
+        >
           <span className="ml-2  rounded-full bg-white py-2 px-2">
             <GrCart className="text-3xl" />
           </span>
-          <p className="text-2xl md:text-2xl">ADD TO CART</p>
+          <p className="text-2xl md:text-2xl">GO TO PRODUCT</p>
         </button>
       </div>
     </div>
