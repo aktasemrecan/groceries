@@ -3,13 +3,22 @@ import { getAuth } from "firebase/auth";
 import { fetchUserDataFromFs } from "../services";
 import Loading from "../components/Loading";
 import { MdFavorite } from "react-icons/md";
-import { useDispatch } from "react-redux";
-import { sumTotalAction } from "../actions";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { toast } from "react-toastify";
+import _ from "lodash";
+import { db } from "../firebase";
 
 export default function MyCart() {
   const auth = getAuth();
   const [userData, setUserData] = useState();
-  const dispatch = useDispatch();
+  const [checkBool, setCheckBool] = useState(false);
+  const [sumTotally, setSumTotally] = useState(0);
 
   const getUserData = async () => {
     const doc = await fetchUserDataFromFs();
@@ -19,18 +28,82 @@ export default function MyCart() {
   useEffect(() => {
     if (auth.currentUser) {
       getUserData();
+      sumTotal();
     }
   }, [auth.currentUser]);
 
-  const sumTotal = (product) => {
-    // const newSum = (
-    //   (product.price -(product.price * product.discount) / 100) *product.quantity);
-    // dispatch(sumTotalAction(newSum));
+  const onFavoriteClick = async (productId) => {
+    try {
+      if (checkBool) {
+        await updateDoc(doc(db, "users", auth.currentUser.uid), {
+          favorites: arrayRemove(productId),
+        });
+        checkFavorite(productId);
+
+        toast.info("Product has been deleted from favorites.");
+      } else {
+        await updateDoc(doc(db, "users", auth.currentUser.uid), {
+          favorites: arrayUnion(productId),
+        });
+        checkFavorite(productId);
+
+        toast.info("Product has been successfully added to favorites.");
+      }
+    } catch (error) {
+      toast.error("e" + error.message);
+    }
+  };
+
+  const checkFavorite = async (productId) => {
+    const snapDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+    const favoritesArray = snapDoc.data().favorites;
+    const checkBool = _.includes(favoritesArray, productId);
+    setCheckBool(checkBool);
+  };
+  const deleteFromCart = async (
+    docId,
+    quantity,
+    productName,
+    quantityT,
+    price,
+    discount
+  ) => {
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      shoppingCart: arrayRemove({
+        docId: docId,
+        quantity: quantity,
+        productName: productName,
+        quantityT: quantityT,
+        price: price,
+        discount: discount,
+      }),
+    });
+    // I tried to delete data from array to show updated list.
+    // const newArray =_.pull(shoppingCartData,{
+    //   docId: docId,
+    //   quantity: quantity,
+    //   productName: productName,
+    //   quantityT: quantityT,
+    //   price: price,
+    //   discount: discount,
+    // });
+    toast.info("Product has been deleted from shopping cart!");
+  };
+
+  const sumTotal = async () => {
+    let sumNumber = 0;
+    const userData = await fetchUserDataFromFs();
+    userData.shoppingCart.forEach((productData) => {
+      const sum =
+        productData.quantity *
+        (productData.price - (productData.price * productData.discount) / 100);
+      sumNumber = sumNumber + sum;
+    });
+    setSumTotally(sumNumber);
   };
 
   const dataRow = () => {
     return userData.shoppingCart.map((product, index) => {
-      sumTotal(product);
       return (
         <tr
           key={index}
@@ -62,13 +135,22 @@ export default function MyCart() {
 
           <td className="py-4 px-6 items-center justify-center text-center">
             <button
-              onClick={() => {}}
+              onClick={() => onFavoriteClick(product.docId)}
               className="mr-2 rounded-xl text-white  py-3 px-3   bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
             >
               <MdFavorite className="text-lg" />
             </button>
             <button
-              onClick={() => {}}
+              onClick={() =>
+                deleteFromCart(
+                  product.docId,
+                  product.quantity,
+                  product.productName,
+                  product.quantityT,
+                  product.price,
+                  product.discount
+                )
+              }
               className="
               
               rounded-xl
@@ -105,7 +187,7 @@ export default function MyCart() {
               <th scope="col" className="py-3 px-6 text-center">
                 Quantity
               </th>
-              <th scope="col" className="py-3 px-6 text-center">
+              <th scope="col" className="py-3 px-3 text-center">
                 Price
               </th>
               <th
@@ -129,7 +211,27 @@ export default function MyCart() {
                 className="py-3 px-3 justify-center items-center text-center"
               >
                 {/* SHOW THE TOTAL SUM */}
-                {} Euro
+                {sumTotally && sumTotally} Euro
+                <button
+                  onClick={() => {}}
+                  className="
+                  ml-5
+              rounded-xl
+              text-white
+              font-semibold
+              py-2
+              px-2
+              bg-blue-400
+              hover:bg-blue-500
+              active:bg-blue-600
+              transition
+              duration-200
+              ease-in-out
+              
+              "
+                >
+                  PURCHASE
+                </button>
               </th>
             </tr>
           </tfoot>

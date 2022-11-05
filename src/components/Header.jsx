@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <nav className="mt-4 mx-4 p-3 rounded-2xl bg-gray-800 border-gray-700">
-      <div className="container flex flex-wrap justify-between items-center mx-auto">
+      <div className="flex flex-wrap justify-between items-center mx-auto">
         <Link className="flex items-center" to="/">
           <img
             src="https://flowbite.com/docs/images/logo.svg"
@@ -30,6 +30,7 @@ export default function Header() {
             Groceries
           </span>
         </Link>
+
         <div className="w-full md:block md:w-auto">
           <ul className="text-white flex space-x-2 items-center justify-end">
             <HeaderNav text="Home" path="/" />

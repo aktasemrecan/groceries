@@ -1,14 +1,11 @@
 import { combineReducers } from "redux";
-import productDataReducer from "./productDataReducer";
-import productDetailReducer from "./productDetailReducer";
-import sumTotalReducer from "./sumTotalReducer";
+import searchOnReducer from "./searchOnReducer";
+
 import userReducer from "./userReducer";
 
 const rootReducer = combineReducers({
     userReducer: userReducer,
-    productDetailReducer: productDetailReducer,
-    productDataReducer: productDataReducer,
-    sumTotalReducer: sumTotalReducer
+    searchOn: searchOnReducer,
 });
 
 export default rootReducer;

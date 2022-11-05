@@ -62,7 +62,6 @@ export default function ProductDetail() {
       );
       const favoritesArray = snapDoc.data().favorites;
       const checkBool = _.includes(favoritesArray, docId);
-      console.log(checkBool);
       setCheckBool(checkBool);
     } catch (error) {}
   };
@@ -78,7 +77,6 @@ export default function ProductDetail() {
         docId: docId,
         quantity: quantity,
       });
-      console.log(selectedData.length);
 
       if (selectedData.length === 0) {
         await updateDoc(doc(db, "users", state.userReducer.user.uid), {
@@ -105,7 +103,7 @@ export default function ProductDetail() {
           }),
         });
 
-        toast.info("Product has been deleted to shopping cart!");
+        toast.info("Product has been deleted from shopping cart!");
       }
     } catch (error) {}
   };

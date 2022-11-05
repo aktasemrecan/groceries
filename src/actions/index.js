@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const userAction = (user) => {
@@ -23,18 +23,9 @@ export const userDataAction = (userId) => async (dispatch, getState) => {
   }
 };
 
-
-
-export const productDataAction = (product)=>{
-  return{
-    type: "PRODUCT_DATA",
-    payload: product
-  }
-};
-
-export const sumTotalAction = (newSum)=>{
-  return{
-    type: "SUM_TOTAL",
-    payload: newSum
-  }
+export const searchOnAction = (bool) => {
+  return {
+    type: "SEARCH_ACTIVE",
+    payload: bool,
+  };
 };
