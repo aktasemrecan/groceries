@@ -25,7 +25,6 @@ export default function ProductCard({
   discount
 }) {
   const state = useSelector((state) => state);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [checkBool, setCheckBool] = useState();
 
@@ -52,17 +51,7 @@ export default function ProductCard({
   };
 
   const onProductClick = () => {
-    dispatch(
-      productDataAction({
-        productName: productName,
-        imageUrl: imageUrl,
-        price: price,
-        quantityT: quantityT,
-        productId: productId,
-        discount: discount
-      })
-    );
-    navigate("/product");
+    navigate("/product/"+productId);
   };
 
   async function checkFavorite() {

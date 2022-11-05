@@ -8,7 +8,7 @@ const productDetailReducer = (state = {
   }
 }, action) => {
   switch (action.type) {
-    case "PRODUCT_DATA":
+    case "PRODUCT_DATA1":
       return { ...state, product: action.payload };
     default:
       return state;

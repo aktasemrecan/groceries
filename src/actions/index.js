@@ -31,3 +31,10 @@ export const productDataAction = (product)=>{
     payload: product
   }
 };
+
+export const sumTotalAction = (newSum)=>{
+  return{
+    type: "SUM_TOTAL",
+    payload: newSum
+  }
+};

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
 import ProductCard from "../components/ProductCard";
+import Loading from "./Loading";
 
 export default function Products() {
   const [snapData, setSnapData] = useState();
@@ -40,8 +41,16 @@ export default function Products() {
   };
 
   return (
-    <div className="m-5 grid  grid-cols-1 gap-1   md:grid-cols-3 md:gap-3  ">
-      {snapData ? renderedList() : "Loading..."}
+    <div >
+      {snapData ? (
+        <div className="m-5 grid  grid-cols-1 gap-1 md:grid-cols-3 md:gap-3  ">
+          {renderedList()}
+        </div>
+      ) : (
+        <div className="flex flex-col static h-96 w-full items-center justify-center">
+          <Loading />
+        </div>
+      )}
     </div>
   );
 }

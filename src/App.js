@@ -49,7 +49,7 @@ function App() {
         <Route path="/my-shopping-cart" element={<MyCart />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/add-product" element={<AddProduct />} />
-        <Route path="/product" element={<ProductDetail />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>
     </BrowserRouter>
     <ToastContainer
