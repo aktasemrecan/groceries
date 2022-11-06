@@ -15,6 +15,7 @@ import _ from "lodash";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { productDataAction } from "../actions";
+import { getAuth } from "firebase/auth";
 
 export default function ProductCard({
   productName,
@@ -22,10 +23,11 @@ export default function ProductCard({
   price,
   quantityT,
   productId,
-  discount
+  discount,
 }) {
   const state = useSelector((state) => state);
   const navigate = useNavigate();
+  const auth = getAuth();
   const [checkBool, setCheckBool] = useState();
 
   const onFavoriteClick = async () => {
@@ -51,19 +53,21 @@ export default function ProductCard({
   };
 
   const onProductClick = () => {
-    navigate("/product/"+productId);
+    navigate("/product/" + productId);
   };
 
   async function checkFavorite() {
-    try {
-      const snapDoc = await getDoc(
-        doc(db, "users", state.userReducer.user.uid)
-      );
-      const favoritesArray = snapDoc.data().favorites;
-      const checkBool = _.includes(favoritesArray, productId);
-      setCheckBool(checkBool);
-    } catch (error) {
-      toast.error(error.message);
+    if (auth.currentUser) {
+      try {
+        const snapDoc = await getDoc(
+          doc(db, "users", state.userReducer.user.uid)
+        );
+        const favoritesArray = snapDoc.data().favorites;
+        const checkBool = _.includes(favoritesArray, productId);
+        setCheckBool(checkBool);
+      } catch (error) {
+        toast.error("Check Favorite" + error.message);
+      }
     }
   }
 
@@ -87,13 +91,17 @@ export default function ProductCard({
         </p>
       </div>
       <hr />
-      <div className="flex justify-between items-center px-3 py-3">
-        <button
-          onClick={onFavoriteClick}
-          className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
-        >
-          <MdFavorite className="text-3xl" />
-        </button>
+      <div className="flex just  items-center px-3 py-3">
+        {auth.currentUser && (
+          <>
+            <button
+              onClick={onFavoriteClick}
+              className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
+            >
+              <MdFavorite className="text-3xl" />
+            </button>
+          </>
+        )}
         <button
           onClick={onProductClick}
           className="items-center flex justify-around rounded-2xl w-full md:w-[75%] text-white text-xl font-sans py-2 px-1 bg-blue-400 hover:bg-blue-500 active:bg-blue-600 transition duration-200 ease-in-out"

@@ -32,11 +32,11 @@ export default function Login() {
     }
   };
   return (
-    <div className="container w-full mx-auto">
+    <div className="mx-auto w-[95%] ">
       <HeaderLabel text="Login" />
       <div className="flex">
         <img
-          className="w-[49%] rounded-xl "
+          className="w-[47%] rounded-xl "
           src="https://media.timeout.com/images/105041644/image.jpg"
           alt="Groceries"
         />

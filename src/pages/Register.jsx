@@ -55,7 +55,7 @@ export default function Register() {
     }
   };
   return (
-    <div className="container w-full mx-auto">
+    <div className="mx-auto w-[95%]">
       <HeaderLabel text="Register" />
       <div className="flex">
         <img

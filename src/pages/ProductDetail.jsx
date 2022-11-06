@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import {
   arrayRemove,
   arrayUnion,
@@ -16,6 +17,7 @@ import { db } from "../firebase";
 
 export default function ProductDetail() {
   const params = useParams();
+  const auth = getAuth();
   const [docData, setDocData] = useState();
   const [docId, setDocId] = useState();
   const [checkBool, setCheckBool] = useState(false);
@@ -158,23 +160,25 @@ export default function ProductDetail() {
               </p>
             )}
             <div className="flex mt-24">
-              <button
-                onClick={onFavoriteClick}
-                className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
-              >
-                <MdFavorite className="text-3xl" />
-              </button>
-              <input
-                type="number"
-                required
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                className="rounded-tl-full rounded-bl-full w-[17%] border-2 px-3 text-red-400 bg-gray-200 border-blue-300"
-              />
-              <button
-                onClick={addToCart}
-                className="
+              {auth.currentUser && (
+                <>
+                  <button
+                    onClick={onFavoriteClick}
+                    className="mr-2 rounded-full text-white  py-3 px-3 bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
+                  >
+                    <MdFavorite className="text-3xl" />
+                  </button>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="rounded-tl-full rounded-bl-full w-[17%] border-2 px-3 text-red-400 bg-gray-200 border-blue-300"
+                  />
+                  <button
+                    onClick={addToCart}
+                    className="
                 mr-2
                 rounded-tr-full rounded-br-full
                 text-white
@@ -187,9 +191,11 @@ export default function ProductDetail() {
                 transition
                 duration-200
                 ease-in-out"
-              >
-                ADD TO CART
-              </button>
+                  >
+                    ADD TO CART
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

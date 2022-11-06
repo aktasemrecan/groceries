@@ -103,76 +103,78 @@ export default function MyCart() {
   };
 
   const dataRow = () => {
-    return userData.shoppingCart.map((product, index) => {
-      return (
-        <tr
-          key={index}
-          className={` border-b  border-gray-700 ${
-            index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
-          }`}
-        >
-          <th
-            scope="row"
-            className="py-4 px-6 font-medium text-lg text-white whitespace-nowrap "
+    if(userData.shoppingCart){
+      return userData.shoppingCart.map((product, index) => {
+        return (
+          <tr
+            key={index}
+            className={` border-b  border-gray-700 ${
+              index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
+            }`}
           >
-            {product.productName}
-          </th>
-          <td className="py-4 px-6 text-lg text-center">
-            {product.quantity}{" "}
-            {product.quantityT
-              ? "Kg"
-              : product.quantity !== 0
-              ? "Pieces"
-              : "Piece"}
-          </td>
-          <td className="py-4 px-6 text-lg text-center">
-            {(
-              (product.price - (product.price * product.discount) / 100) *
-              product.quantity
-            ).toFixed(2)}{" "}
-            €
-          </td>
-
-          <td className="py-4 px-6 items-center justify-center text-center">
-            <button
-              onClick={() => onFavoriteClick(product.docId)}
-              className="mr-2 rounded-xl text-white  py-3 px-3   bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
+            <th
+              scope="row"
+              className="py-4 px-6 font-medium text-lg text-white whitespace-nowrap "
             >
-              <MdFavorite className="text-lg" />
-            </button>
-            <button
-              onClick={() =>
-                deleteFromCart(
-                  product.docId,
-                  product.quantity,
-                  product.productName,
-                  product.quantityT,
-                  product.price,
-                  product.discount
-                )
-              }
-              className="
-              
-              rounded-xl
-              text-white
-              font-semibold
-              py-3
-              px-3
-              bg-blue-400
-              hover:bg-blue-500
-              active:bg-blue-600
-              transition
-              duration-200
-              ease-in-out
-              
-              "
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
+              {product.productName}
+            </th>
+            <td className="py-4 px-6 text-lg text-center">
+              {product.quantity}{" "}
+              {product.quantityT
+                ? "Kg"
+                : product.quantity !== 0
+                ? "Pieces"
+                : "Piece"}
+            </td>
+            <td className="py-4 px-6 text-lg text-center">
+              {(
+                (product.price - (product.price * product.discount) / 100) *
+                product.quantity
+              ).toFixed(2)}{" "}
+              €
+            </td>
+  
+            <td className="py-4 px-6 items-center justify-center text-center">
+              <button
+                onClick={() => onFavoriteClick(product.docId)}
+                className="mr-2 rounded-xl text-white  py-3 px-3   bg-red-500 hover:bg-red-600 active:bg-red-700 transition duration-200 ease-in-out"
+              >
+                <MdFavorite className="text-lg" />
+              </button>
+              <button
+                onClick={() =>
+                  deleteFromCart(
+                    product.docId,
+                    product.quantity,
+                    product.productName,
+                    product.quantityT,
+                    product.price,
+                    product.discount
+                  )
+                }
+                className="
+                
+                rounded-xl
+                text-white
+                font-semibold
+                py-3
+                px-3
+                bg-blue-400
+                hover:bg-blue-500
+                active:bg-blue-600
+                transition
+                duration-200
+                ease-in-out
+                
+                "
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        );
+      });
+    }
   };
 
   const renderedList = () => {
@@ -210,8 +212,7 @@ export default function MyCart() {
                 scope="col"
                 className="py-3 px-3 justify-center items-center text-center"
               >
-                {/* SHOW THE TOTAL SUM */}
-                {sumTotally && sumTotally} Euro
+                {sumTotally && sumTotally.toFixed(2)} Euro
                 <button
                   onClick={() => {}}
                   className="

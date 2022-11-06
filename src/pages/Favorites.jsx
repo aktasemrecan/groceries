@@ -14,12 +14,14 @@ export default function Favorites() {
   const auth = getAuth();
 
   const fetchProducts = async () => {
-    await getDoc(doc(db, "users", state.userReducer.user.uid)).then(
-      (querySnapshot) => {
-        const favoriteList = querySnapshot.get("favorites");
-        catchProducts(favoriteList);
-      }
-    );
+    if(auth.currentUser){
+      await getDoc(doc(db, "users", auth.currentUser.uid)).then(
+        (querySnapshot) => {
+          const favoriteList = querySnapshot.get("favorites");
+          catchProducts(favoriteList);
+        }
+      );
+    }
   };
 
   const catchProducts = (favoriteList) => {
@@ -39,22 +41,26 @@ export default function Favorites() {
   }, [auth.currentUser]);
 
   const renderedList = () => {
-    return favoriteProducts.map((doc, i) => (
-      <ProductCard
-        key={i}
-        productId={docId[i]}
-        productName={doc.productName}
-        price={doc.price}
-        imageUrl={doc.imageUrl}
-        quantityT={doc.quantityT}
-      />
-    ));
+    if(favoriteProducts){
+      return favoriteProducts.map((doc, i) => (
+        <ProductCard
+          key={i}
+          productId={docId[i]}
+          productName={doc.productName}
+          price={doc.price}
+          imageUrl={doc.imageUrl}
+          quantityT={doc.quantityT}
+        />
+      ));
+    }
   };
 
   return (
-    <div >
+    <div  >
       {favoriteProducts ? (
-        renderedList()
+        <div className="m-5 grid  grid-cols-1 gap-1 md:grid-cols-3 md:gap-3 ">
+          {renderedList()}
+        </div>
       ) : (
         <div className="flex flex-col static h-96 w-full items-center justify-center">
           <Loading />
