@@ -21,7 +21,7 @@ export default function ProductDetail() {
   const [docData, setDocData] = useState();
   const [docId, setDocId] = useState();
   const [checkBool, setCheckBool] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const state = useSelector((state) => state);
 
   const fetchData = async () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { db } from "../firebase";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
@@ -21,7 +21,7 @@ export default function GoogleAuthButton() {
         name: user.displayName,
       };
       data.timeStamp = serverTimestamp();
-      setDoc(doc(db, "users", user.uid), data);
+      updateDoc(doc(db, "users", user.uid), data);
       toast.info("You signed in with google successfully!");
       dispatch(userAction(user));
       dispatch(userDataAction());

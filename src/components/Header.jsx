@@ -26,7 +26,7 @@ export default function Header() {
             className="mr-3 h-6 sm:h-10"
             alt="Flowbite Logo"
           />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+          <span className="text-2xl font-semibold whitespace-nowrap text-white">
             Groceries
           </span>
         </Link>
